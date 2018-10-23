@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,7 +74,8 @@ public class SignatureController {
 	public String createMenu() {
 		File file = null;
 		try {
-			file = ResourceUtils.getFile("classpath:menu.json");
+			ClassPathResource cpr = new ClassPathResource("menu.json");
+			file = cpr.getFile();
 			List<String> readLines = Files.readLines(file, StandardCharsets.UTF_8);
 			log.info(readLines.toString());
 			JSONObject json = JSON.parseArray(readLines.toString()).getJSONObject(0);
