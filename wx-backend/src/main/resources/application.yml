@@ -1,0 +1,20 @@
+server:
+  port: 9000
+logging:
+  config: classpath:logback.xml
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.95.117.48:3306/wx?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: '!QAZ2wsx'
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    type: com.alibaba.druid.pool.DruidDataSource
+
+wx: 
+  token: shotacon
+  appid: wx653238f80b94017a
+  appsecret: 6f1491515c8502a31c961b5d5bcb9362
