@@ -26,7 +26,7 @@ public class WxUrl {
 	private final static String GET_ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
 
 	public static String GET_ACCESS_TOKEN_URL() {
-		return GET_ACCESS_TOKEN + "appid" + wxConfig.getAppid() + "&secret" + wxConfig.getAppsecret();
+		return GET_ACCESS_TOKEN + "appid=" + wxConfig.getAppid() + "&secret=" + wxConfig.getAppsecret();
 	}
 
 	private final static String POST_MENU = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
