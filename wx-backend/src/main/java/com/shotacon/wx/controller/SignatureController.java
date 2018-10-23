@@ -2,10 +2,13 @@ package com.shotacon.wx.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +28,7 @@ import com.google.common.io.Files;
 import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.util.RestSSLClient;
 import com.shotacon.wx.util.SignatureUtil;
+import com.shotacon.wx.util.StreamUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -72,13 +77,11 @@ public class SignatureController {
 	@PostMapping("/menu")
 	@ApiOperation(value = "创建菜单", notes = "创建菜单", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String createMenu() {
-		File file = null;
 		try {
 			ClassPathResource cpr = new ClassPathResource("menu.json");
-			file = cpr.getFile();
-			List<String> readLines = Files.readLines(file, StandardCharsets.UTF_8);
-			log.info(readLines.toString());
-			JSONObject json = JSON.parseArray(readLines.toString()).getJSONObject(0);
+			String jsonStr = StreamUtil.inputStreamToString(cpr.getInputStream());
+			log.info(jsonStr);
+			JSONObject json = JSON.parseObject(jsonStr);
 			JSONObject body = RestSSLClient.httpsRestTemplate
 					.postForEntity(WxUrl.POST_MENU_URL(), json.toJSONString(), JSONObject.class).getBody();
 			return body.toJSONString();
