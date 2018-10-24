@@ -1,7 +1,6 @@
 package com.shotacon.wx.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +72,7 @@ public class SignatureController {
 			ClassPathResource cpr = new ClassPathResource("menu.json");
 			String jsonStr = StreamUtil.inputStreamToString(cpr.getInputStream());
 			log.info(jsonStr);
-			JSONObject json = JSON.parseObject(new String(jsonStr.getBytes(StandardCharsets.ISO_8859_1)));
+			JSONObject json = JSON.parseObject(jsonStr);
 			JSONObject body = RestSSLClient.httpsRestTemplate
 					.postForEntity(WxUrl.POST_MENU_URL(), json.toJSONString(), JSONObject.class).getBody();
 			return body.toJSONString();
