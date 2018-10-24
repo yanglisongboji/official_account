@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @Api(tags = { "微信相关接口" })
-public class SignatureController {
+public class WxStuffController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -80,6 +80,24 @@ public class SignatureController {
 			e.printStackTrace();
 			return e.getMessage();
 		}
+	}
+
+	@PostMapping("/template/send")
+	@ApiOperation(value = "发送模板消息", notes = "发送模板消息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String sendTemplate(
+			@ApiParam(value = "模板内容", name = "content") @RequestParam(value = "content", required = true) String content) {
+		String body = RestSSLClient.httpsRestTemplate
+				.postForEntity(WxUrl.POST_SEND_TEMPLATE_URL(), content, String.class).getBody();
+		log.info(body);
+		return body;
+	}
+
+	@GetMapping("/user/list")
+	@ApiOperation(value = "获取所有用户", notes = "获取所有用户", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String listUser() {
+		JSONObject body = RestSSLClient.httpsRestTemplate.getForEntity(WxUrl.GET_LIST_USER_URL(), JSONObject.class)
+				.getBody();
+		return body.toJSONString();
 	}
 
 }
