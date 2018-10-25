@@ -1,8 +1,11 @@
 package com.shotacon.wx.job;
 
+import org.springframework.stereotype.Component;
+
 import com.shotacon.wx.config.JobManager;
 import com.shotacon.wx.util.SignatureUtil;
 
+@Component
 public class JobSchedule {
 
 	static {
