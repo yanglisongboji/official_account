@@ -1,8 +1,6 @@
 package com.shotacon.wx.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,19 +48,7 @@ public class WxStuffController {
 	@GetMapping("/accesstoken")
 	@ApiOperation(value = "获取Access_token", notes = "获取Access_token", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String accessToken() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("grant_type", "client_credential");
-		map.put("appid", WxUrl.wxConfig.getAppid());
-		map.put("secret", WxUrl.wxConfig.getAppsecret());
-		JSONObject body = RestSSLClient.httpsRestTemplate
-				.getForEntity(WxUrl.GET_ACCESS_TOKEN_URL(), JSONObject.class, map).getBody();
-		if (body.containsKey("access_token")) {
-			WxUrl.access_token_map.put("access_token", body.getString("access_token"));
-			WxUrl.access_token_map.put("expires_in", body.getString("expires_in"));
-			return body.toJSONString();
-		}
-		log.error("Get Access Token Error, message: {}", body.toJSONString());
-		return body.toJSONString();
+		return SignatureUtil.reFreshAccessToken();
 	}
 
 	@PostMapping("/menu")
