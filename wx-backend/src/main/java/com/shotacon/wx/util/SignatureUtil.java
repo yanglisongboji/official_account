@@ -41,6 +41,7 @@ public class SignatureUtil {
 		}
 		WxUrl.access_token_map.put("access_token", body.getString("access_token"));
 		WxUrl.access_token_map.put("expires_in", body.getString("expires_in"));
+		log.info("ReFresh AccessToken Success. token -> {}", body.getString("access_token"));
 		return body.toJSONString();
 	}
 }

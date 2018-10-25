@@ -10,6 +10,9 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JobManager {
 
 	private static SchedulerFactory schedulerFactory = new StdSchedulerFactory();
@@ -44,7 +47,7 @@ public class JobManager {
 
 			// 调度容器设置JobDetail和Trigger
 			sched.scheduleJob(jobDetail, trigger);
-
+			log.info("Add Job {}.", jobClass);
 			// 启动
 			if (!sched.isShutdown()) {
 				sched.start();
