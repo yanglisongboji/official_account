@@ -3,6 +3,7 @@ package com.shotacon.wx.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +34,21 @@ public class SignatureUtil {
 		map.put("grant_type", "client_credential");
 		map.put("appid", WxUrl.wxConfig.getAppid());
 		map.put("secret", WxUrl.wxConfig.getAppsecret());
+
 		JSONObject body = RestSSLClient.httpsRestTemplate
 				.getForEntity(WxUrl.GET_ACCESS_TOKEN_URL(), JSONObject.class, map).getBody();
+
 		if (!body.containsKey("access_token")) {
 			log.error("Get Access Token Error, message: {}", body.toJSONString());
 			return body.toJSONString();
 		}
+
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.MILLISECOND, body.getIntValue("expires_in"));
+
 		WxUrl.access_token_map.put("access_token", body.getString("access_token"));
-		WxUrl.access_token_map.put("expires_in", body.getString("expires_in"));
+		WxUrl.access_token_map.put("expires_in", now.getTimeInMillis());
+
 		log.info("ReFresh AccessToken Success. token -> {}", body.getString("access_token"));
 		return body.toJSONString();
 	}

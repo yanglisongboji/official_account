@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 
 import com.shotacon.wx.mapper.WxStuffMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class WxErrorCode {
 
 	private static WxStuffMapper mapper;
@@ -19,13 +22,17 @@ public class WxErrorCode {
 	@Autowired
 	private WxStuffMapper wxStuffMapper;
 
+	/**
+	 * key: code, msg
+	 */
 	private static Map<String, String> wxErrorCode = new HashMap<String, String>();
 
 	@PostConstruct
 	private void init() {
 		WxErrorCode.mapper = wxStuffMapper;
-		List<Map<String, String>> resultLit = mapper.queryAllErrorCode();
-		resultLit.forEach(each -> wxErrorCode.putAll(each));
+		List<Map<String, String>> resultList = mapper.queryAllErrorCode();
+		resultList.forEach(each -> wxErrorCode.putAll(each));
+		log.info("Init wx_error_code done, total {} of data", resultList.size());
 	}
 
 	public static String get(String key) throws Exception {
