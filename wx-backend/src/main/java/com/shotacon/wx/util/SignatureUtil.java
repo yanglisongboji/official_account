@@ -83,12 +83,14 @@ public class SignatureUtil {
 	 * @return
 	 */
 	public static String sendTextMsg(MessageEntity messageEntity, String content) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ToUserName", messageEntity.getFromUserName());
-		map.put("FromUserName", messageEntity.getToUserName());
-		map.put("MsgType", MessageType.TEXT);
-		map.put("CreateTime", System.currentTimeMillis());
-		map.put("Content", content);
-		return xstream.toXML(map);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<xml>");
+		sb.append("<ToUserName><![CDATA[").append(messageEntity.getFromUserName()).append("]]></ToUserName>");
+		sb.append("<FromUserName><![CDATA[").append(messageEntity.getToUserName()).append("]]></FromUserName>");
+		sb.append("<CreateTime>").append(System.currentTimeMillis()).append("</CreateTime>");
+		sb.append("<MsgType><![CDATA[").append(MessageType.TEXT).append("]]></MsgType>");
+		sb.append("<Content><![CDATA[").append(content).append("]]></Content>");
+		sb.append("</xml>");
+		return xstream.toXML(sb.toString());
 	}
 }
