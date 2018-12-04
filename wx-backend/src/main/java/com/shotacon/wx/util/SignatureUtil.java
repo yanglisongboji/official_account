@@ -64,11 +64,6 @@ public class SignatureUtil {
 	public static MessageEntity acceptMessage(InputStream in) throws IOException, AesException {
 		String xml = ByteUtil.inputStreamToString(in);
 		log.info(xml);
-
-//		WXBizMsgCrypt pc = new WXBizMsgCrypt(WxUrl.wxConfig.getToken(), WxUrl.wxConfig.getEncodingAESKey(),
-//				WxUrl.wxConfig.getAppid());
-//		pc.decryptMsg(msgSignature, timeStamp, nonce, postData)
-
 		xstream.processAnnotations(MessageEntity.class);
 		xstream.alias("xml", MessageEntity.class);
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
