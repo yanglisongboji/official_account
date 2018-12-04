@@ -18,4 +18,4 @@ wx:
   token: shotacon
   appid: wx1159f103330c7674 #wx653238f80b94017a
   appsecret: f1f7d7762f3417fd2ad0dc3bd8025aac #096f0d891a2cd23c591bff200ef91486
-  EncodingAESKey: JdOWTwNGjpu0p0ipTEowGJM8kcKgtpsBZ2CAekhztLt
+  encodingAESKey: JdOWTwNGjpu0p0ipTEowGJM8kcKgtpsBZ2CAekhztLt

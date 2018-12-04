@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.entity.MessageEntity;
+import com.shotacon.wx.util.aes.AesException;
 import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +60,14 @@ public class SignatureUtil {
 		return body.toJSONString();
 	}
 
-	public static MessageEntity acceptMessage(InputStream in) throws IOException {
+	public static MessageEntity acceptMessage(InputStream in) throws IOException, AesException {
 		String xml = ByteUtil.inputStreamToString(in);
+		log.info(xml);
+
+//		WXBizMsgCrypt pc = new WXBizMsgCrypt(WxUrl.wxConfig.getToken(), WxUrl.wxConfig.getEncodingAESKey(),
+//				WxUrl.wxConfig.getAppid());
+//		pc.decryptMsg(msgSignature, timeStamp, nonce, postData)
+
 		xstream.processAnnotations(MessageEntity.class);
 		xstream.alias("xml", MessageEntity.class);
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);

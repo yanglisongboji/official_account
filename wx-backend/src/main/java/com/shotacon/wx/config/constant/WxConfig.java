@@ -15,5 +15,7 @@ public class WxConfig {
 	private String appid;
 	@Value("${wx.appsecret}")
 	private String appsecret;
+	@Value("${wx.encodingAESKey}")
+	private String encodingAESKey;
 
 }

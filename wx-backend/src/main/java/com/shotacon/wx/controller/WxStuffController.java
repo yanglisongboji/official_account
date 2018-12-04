@@ -20,6 +20,7 @@ import com.shotacon.wx.entity.MessageEntity;
 import com.shotacon.wx.util.RestSSLClient;
 import com.shotacon.wx.util.SignatureUtil;
 import com.shotacon.wx.util.StreamUtil;
+import com.shotacon.wx.util.aes.AesException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,10 +38,10 @@ public class WxStuffController {
 		try {
 			MessageEntity acceptMessage = SignatureUtil.acceptMessage(request.getInputStream());
 			log.info(acceptMessage.toString());
-		} catch (IOException e) {
+		} catch (IOException | AesException e) {
 			log.error("parse xml to entity error, {}", e.getMessage());
 		}
-		return StringUtils.EMPTY;
+		return "success";
 	}
 
 	@GetMapping("/signature")

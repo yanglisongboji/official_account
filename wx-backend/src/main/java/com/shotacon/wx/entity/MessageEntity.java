@@ -15,7 +15,7 @@ import lombok.ToString;
 public class MessageEntity {
 
 	public enum MessageType {
-		TEXT, IMAGE, VOICE, VIDEO, SHORTVIDEO, LOCATION, LINK
+		TEXT, IMAGE, VOICE, VIDEO, SHORTVIDEO, LOCATION, LINK, event
 	}
 
 	/**
@@ -118,6 +118,24 @@ public class MessageEntity {
 	 */
 	@XStreamAlias("Url")
 	private String url;
+
+	/**
+	 * 事件类型, subscribe(订阅)、unsubscribe(取消订阅)
+	 */
+	@XStreamAlias("Event")
+	private String event;
+
+	/**
+	 * 事件KEY值，qrscene_为前缀，后面为二维码的参数值
+	 */
+	@XStreamAlias("EventKey")
+	private String eventKey;
+
+	/**
+	 * 二维码的ticket，可用来换取二维码图片
+	 */
+	@XStreamAlias("Ticket")
+	private String ticket;
 
 	/**
 	 * 消息id
