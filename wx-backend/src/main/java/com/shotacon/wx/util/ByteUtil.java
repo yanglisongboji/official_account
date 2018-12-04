@@ -1,5 +1,8 @@
 package com.shotacon.wx.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class ByteUtil {
 
 	/**
@@ -30,5 +33,14 @@ public class ByteUtil {
 
 		String s = new String(tempArr);
 		return s;
+	}
+
+	public static String inputStreamToString(InputStream in) throws IOException {
+		StringBuffer xmlMsg = new StringBuffer();
+		byte[] b = new byte[4096];
+		for (int n; (n = in.read(b)) != -1;) {
+			xmlMsg.append(new String(b, 0, n, "UTF-8"));
+		}
+		return xmlMsg.toString();
 	}
 }

@@ -1,5 +1,7 @@
 package com.shotacon.wx.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -11,11 +13,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
+import com.shotacon.wx.entity.MessageEntity;
+import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SignatureUtil {
+
+	private static XStream xstream = new XStream();
 
 	public static boolean signature(String token, String timestamp, String nonce, String signature) {
 		String[] arr = new String[] { token, timestamp, nonce };
@@ -51,5 +57,13 @@ public class SignatureUtil {
 
 		log.info("ReFresh AccessToken Success. token -> {}", body.getString("access_token"));
 		return body.toJSONString();
+	}
+
+	public static MessageEntity acceptMessage(InputStream in) throws IOException {
+		String xml = ByteUtil.inputStreamToString(in);
+		xstream.processAnnotations(MessageEntity.class);
+		xstream.alias("xml", MessageEntity.class);
+		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
+		return message;
 	}
 }
