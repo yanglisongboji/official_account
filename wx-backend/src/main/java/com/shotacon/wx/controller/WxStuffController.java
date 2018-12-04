@@ -38,7 +38,9 @@ public class WxStuffController {
 		try {
 			MessageEntity acceptMessage = SignatureUtil.acceptMessage(request.getInputStream());
 			log.info(acceptMessage.toString());
-			return SignatureUtil.sendTextMsg(acceptMessage, "get~");
+			String sendTextMsg = SignatureUtil.sendTextMsg(acceptMessage, "get~");
+			log.info(sendTextMsg);
+			return sendTextMsg;
 		} catch (IOException | AesException e) {
 			log.error("parse xml to entity error, {}", e.getMessage());
 			return "success";
