@@ -91,6 +91,12 @@ public class SignatureUtil {
 		sb.append("<MsgType><![CDATA[").append(MessageType.TEXT).append("]]></MsgType>");
 		sb.append("<Content><![CDATA[").append(content).append("]]></Content>");
 		sb.append("</xml>");
-		return xstream.toXML(sb.toString());
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<xml>");
+		System.out.println(sb.toString());
 	}
 }
