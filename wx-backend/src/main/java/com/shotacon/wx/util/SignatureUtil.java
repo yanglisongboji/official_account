@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.entity.MessageEntity;
+import com.shotacon.wx.entity.MessageEntity.MessageType;
 import com.shotacon.wx.util.aes.AesException;
 import com.thoughtworks.xstream.XStream;
 
@@ -72,5 +73,22 @@ public class SignatureUtil {
 		xstream.alias("xml", MessageEntity.class);
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
 		return message;
+	}
+
+	/**
+	 * 回复文本消息
+	 * 
+	 * @param requestMap
+	 * @param content
+	 * @return
+	 */
+	public static String sendTextMsg(MessageEntity messageEntity, String content) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ToUserName", messageEntity.getFromUserName());
+		map.put("FromUserName", messageEntity.getToUserName());
+		map.put("MsgType", MessageType.TEXT);
+		map.put("CreateTime", System.currentTimeMillis());
+		map.put("Content", content);
+		return xstream.toXML(map);
 	}
 }

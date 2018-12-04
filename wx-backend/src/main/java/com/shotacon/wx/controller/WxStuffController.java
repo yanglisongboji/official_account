@@ -38,10 +38,11 @@ public class WxStuffController {
 		try {
 			MessageEntity acceptMessage = SignatureUtil.acceptMessage(request.getInputStream());
 			log.info(acceptMessage.toString());
+			return SignatureUtil.sendTextMsg(acceptMessage, "get~");
 		} catch (IOException | AesException e) {
 			log.error("parse xml to entity error, {}", e.getMessage());
+			return "success";
 		}
-		return "success";
 	}
 
 	@GetMapping("/signature")
