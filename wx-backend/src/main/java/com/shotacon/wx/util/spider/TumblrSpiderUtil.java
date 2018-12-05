@@ -88,6 +88,7 @@ public class TumblrSpiderUtil {
 			});
 		}
 		try {
+			log.info("wait all process done");
 			countDownLatch.await();
 			es.shutdown();
 		} catch (InterruptedException e) {
