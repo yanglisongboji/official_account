@@ -1,14 +1,7 @@
 package com.shotacon.wx.util.spider;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
-import com.google.common.io.Files;
 import com.shotacon.wx.entity.MessageEntity;
 
 public class Test {

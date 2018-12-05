@@ -1,7 +1,5 @@
 package com.shotacon.wx.entity;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import lombok.AllArgsConstructor;
