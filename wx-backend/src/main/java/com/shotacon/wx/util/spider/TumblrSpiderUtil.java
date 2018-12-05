@@ -55,7 +55,7 @@ public class TumblrSpiderUtil {
 	private static boolean proxy = false;
 
 	public static void main(String[] args) throws IOException {
-		doSpider("https://sexyteenboyss.tumblr.com", 12);
+		doSpider("https://lookingforveins2.tumblr.com", 12);
 	}
 
 	public static String doSpider(String postUrl, int monthNum) {
@@ -79,7 +79,7 @@ public class TumblrSpiderUtil {
 			es.submit(new Runnable() {
 				public void run() {
 					try {
-						Map<String, Set<String>> mediaList = handlePostList(getAllPostByUrl(url));
+						Map<String, Set<String>> mediaList = handlePostList(getAllPostByUrl(url, month));
 						getAllDownload(mediaList, fileName);
 						countDownLatch.countDown();
 					} catch (IOException e) {
@@ -109,22 +109,34 @@ public class TumblrSpiderUtil {
 	 * 根据url获取所有post
 	 * 
 	 * @param url
+	 * @param month
 	 */
-	static Set<String> getAllPostByUrl(String url) {
+	static Set<String> getAllPostByUrl(String url, String month) {
 
 		log.info("getAllPostByUrl begin with {}", url);
 		Set<String> urlPostList = new HashSet<String>();
+
+		String yearMonth = month.replace("/", "");
+//		String post = TumblrUtil.getUrl("https://lookingforveins2.tumblr.com") + "post/";
 		String post = TumblrUtil.getUrl(homeUrl) + "post/";
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
-			Elements elements = doc.getElementsByTag("a");
+			Elements elements = doc.getElementsByTag("section");
 			for (int i = 0; i < elements.size(); i++) {
-				Element e = elements.get(i);
-				String aHref = e.attr("href");
-				if (StringUtils.isNotEmpty(aHref) && aHref.startsWith(post)) {
-					urlPostList.add(aHref);
+				// section
+				Element section = elements.get(i);
+				if (section.id().contains("posts_") && section.id().endsWith(yearMonth)) {
+					Elements elementsByTag = section.getElementsByTag("a");
+					elementsByTag.forEach(elementByTag -> {
+						String aHref = elementByTag.attr("href");
+						if (StringUtils.isNotEmpty(aHref) && aHref.startsWith(post)) {
+							urlPostList.add(aHref);
+						}
+					});
+					break;
 				}
+
 			}
 		} catch (Exception e) {
 			log.error("getAllPostByUrl error: {}", e.getMessage());
@@ -159,9 +171,14 @@ public class TumblrSpiderUtil {
 					String src = e.attr("src");
 					if (StringUtils.isNotEmpty(src) && src.contains(video)) {
 						urlVideoList.add(getDocByUrl(src).getElementsByTag("source").attr("src"));
-						log.info("urlVideoList add one, size: {} ", urlVideoList.size());
+						log.info("urlVideoList +1, size: {} ", urlVideoList.size());
+						break;
 					} else {
-						urlImageList.addAll(getImageUrl(post));
+						Set<String> imageUrl = getImageUrl(post);
+						if (imageUrl.size() > 0) {
+							urlImageList.addAll(getImageUrl(post));
+							break;
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -182,14 +199,22 @@ public class TumblrSpiderUtil {
 	 * @throws Exception
 	 * 
 	 */
-	public static List<String> getImageUrl(String url) throws Exception {
-		log.info("getImageUrl begin with {}", url);
-		List<String> imageUrlStrList = new ArrayList<>();
+	public static Set<String> getImageUrl(String url) throws Exception {
+		log.info("getImageUrl begin");
+		Set<String> imageUrlStrList = new HashSet<>();
 
 		Jsoup.parse(getHtml(url)).getElementsByClass("posts").forEach(posts -> {
 			imageUrlStrList.addAll(
 					posts.getElementsByTag("img").stream().map(e -> e.attr("src")).collect(Collectors.toList()));
 		});
+		// photo-wrapper
+		Elements elementsByClass = Jsoup.parse(getHtml(url)).getElementsByClass("photo-wrapper-inner");
+		if (null != elementsByClass) {
+			imageUrlStrList.add(elementsByClass.get(0).getElementsByTag("img").get(0).attr("src"));
+		} else {
+			Elements elementsBytag = Jsoup.parse(TumblrSpiderUtil.getHtml(url)).getElementsByTag("img");
+			imageUrlStrList.addAll(elementsBytag.stream().map(e -> e.attr("src")).collect(Collectors.toList()));
+		}
 
 		log.info("getImageUrl end with {} pic", imageUrlStrList.size());
 		return imageUrlStrList;

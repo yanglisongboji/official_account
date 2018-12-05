@@ -102,8 +102,7 @@ public class TumblrUtil {
 		Set<String> linesSet = new HashSet<String>();
 		Path parentpath = Paths.get(parentFilePath);
 		if (!Files.exists(parentpath)) {
-			log.info("parentFile [{}] not exist", parentFilePath);
-			return null;
+			Files.createDirectory(parentpath);
 		}
 
 		Files.list(parentpath).forEach(path -> {
