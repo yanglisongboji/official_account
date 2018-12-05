@@ -1,5 +1,7 @@
 package com.shotacon.wx.entity;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @XStreamAlias("xml")
-public class MessageEntity {
+public class MessageEntity implements Cloneable {
 
 	public enum MessageType {
 		TEXT, IMAGE, VOICE, VIDEO, SHORTVIDEO, LOCATION, LINK, event
@@ -142,4 +144,8 @@ public class MessageEntity {
 	 */
 	@XStreamAlias("MsgId")
 	private Long msgId;
+
+	public MessageEntity clone() throws CloneNotSupportedException {
+		return ObjectUtils.clone(this);
+	}
 }

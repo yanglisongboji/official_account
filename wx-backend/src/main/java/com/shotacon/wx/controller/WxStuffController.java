@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
-import com.shotacon.wx.entity.MessageEntity;
 import com.shotacon.wx.util.RestSSLClient;
 import com.shotacon.wx.util.SignatureUtil;
 import com.shotacon.wx.util.StreamUtil;
@@ -36,12 +35,10 @@ public class WxStuffController {
 	@ApiOperation(value = "验证消息", notes = "验证消息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String postHandler(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			MessageEntity acceptMessage = SignatureUtil.acceptMessage(request.getInputStream());
-			log.info(acceptMessage.toString());
-			String sendTextMsg = SignatureUtil.sendTextMsg(acceptMessage, "get~");
+			String sendTextMsg = SignatureUtil.acceptMessage(request.getInputStream());
 			log.info(sendTextMsg);
 			return sendTextMsg;
-		} catch (IOException | AesException e) {
+		} catch (IOException | AesException | CloneNotSupportedException e) {
 			log.error("parse xml to entity error, {}", e.getMessage());
 			return "success";
 		}

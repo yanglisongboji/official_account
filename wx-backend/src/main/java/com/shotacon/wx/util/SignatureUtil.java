@@ -2,12 +2,17 @@ package com.shotacon.wx.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,6 +21,7 @@ import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.entity.MessageEntity;
 import com.shotacon.wx.entity.MessageEntity.MessageType;
 import com.shotacon.wx.util.aes.AesException;
+import com.shotacon.wx.util.spider.TumblrSpiderUtil;
 import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SignatureUtil {
 
 	private static XStream xstream = new XStream();
+
+	private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 	public static boolean signature(String token, String timestamp, String nonce, String signature) {
 		String[] arr = new String[] { token, timestamp, nonce };
@@ -61,13 +69,35 @@ public class SignatureUtil {
 		return body.toJSONString();
 	}
 
-	public static MessageEntity acceptMessage(InputStream in) throws IOException, AesException {
+	public static String acceptMessage(InputStream in) throws IOException, AesException, CloneNotSupportedException {
 		String xml = ByteUtil.inputStreamToString(in);
 		log.info(xml);
 		xstream.processAnnotations(MessageEntity.class);
 		xstream.alias("xml", MessageEntity.class);
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
-		return message;
+		MessageEntity reMessage = message.clone();
+		log.info(message.toString());
+		if (StringUtils.isNotEmpty(message.getContent()) && message.getContent().contains("http")) {
+			String content = message.getContent();
+			String[] split = content.split(">>>");
+			if (split.length <= 1) {
+				reMessage.setContent("提交失败, 请注意格式: 月数>>>网址 , 例如: 12>>>http://xxx.tumblr.com");
+				return SignatureUtil.sendTextMsg(reMessage);
+			}
+			executorService.execute(new Runnable() {
+				@Override
+				public void run() {
+					String filePath = TumblrSpiderUtil.doSpider(split[1], Integer.valueOf(split[0]));
+					try {
+						Files.write(Paths.get(filePath + message.getFromUserName()), null, StandardCharsets.UTF_8);
+					} catch (IOException e) {
+						log.error("write file error : {}", e.getMessage());
+					}
+				}
+			});
+			reMessage.setContent("提交成功, 等待推送结果.");
+		}
+		return SignatureUtil.sendTextMsg(reMessage);
 	}
 
 	/**
@@ -77,14 +107,14 @@ public class SignatureUtil {
 	 * @param content
 	 * @return
 	 */
-	public static String sendTextMsg(MessageEntity messageEntity, String content) {
+	public static String sendTextMsg(MessageEntity messageEntity) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<xml>");
 		sb.append("<ToUserName><![CDATA[").append(messageEntity.getFromUserName()).append("]]></ToUserName>");
 		sb.append("<FromUserName><![CDATA[").append(messageEntity.getToUserName()).append("]]></FromUserName>");
 		sb.append("<CreateTime>").append(System.currentTimeMillis()).append("</CreateTime>");
 		sb.append("<MsgType><![CDATA[").append(MessageType.TEXT).append("]]></MsgType>");
-		sb.append("<Content><![CDATA[").append(content).append("]]></Content>");
+		sb.append("<Content><![CDATA[").append(messageEntity.getContent()).append("]]></Content>");
 		sb.append("</xml>");
 		return sb.toString();
 	}

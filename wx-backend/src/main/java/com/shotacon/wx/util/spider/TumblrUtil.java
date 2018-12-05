@@ -98,17 +98,17 @@ public class TumblrUtil {
 		dir.mkdir();
 	}
 
-	public static void mergeFiles(String parentFilePath) throws IOException {
+	public static String mergeFiles(String parentFilePath) throws IOException {
 		Set<String> linesSet = new HashSet<String>();
 		Path parentpath = Paths.get(parentFilePath);
 		if (!Files.exists(parentpath)) {
 			log.info("parentFile [{}] not exist", parentFilePath);
-			return;
+			return null;
 		}
 
 		Files.list(parentpath).forEach(path -> {
 			try {
-				if(!path.getFileName().equals(parentpath.getFileName())) {
+				if (!path.getFileName().equals(parentpath.getFileName())) {
 					linesSet.addAll(Files.readAllLines(path));
 				}
 			} catch (IOException e) {
@@ -118,8 +118,9 @@ public class TumblrUtil {
 
 		Path finalFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + ".txt");
 		Files.write(finalFile, linesSet, StandardCharsets.UTF_8);
+		return finalFile.toAbsolutePath().toString();
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		mergeFiles("/data/temp/just-an-insane-boy");
 	}

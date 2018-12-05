@@ -58,7 +58,7 @@ public class TumblrSpiderUtil {
 		doSpider("https://sexyteenboyss.tumblr.com", 12);
 	}
 
-	public static void doSpider(String postUrl, int monthNum) {
+	public static String doSpider(String postUrl, int monthNum) {
 
 		homeUrl = postUrl;
 		List<String> monthList = new ArrayList<String>();
@@ -102,6 +102,7 @@ public class TumblrSpiderUtil {
 			log.error("mergeFiles error: {}", e.getMessage());
 		}
 		log.info("main execute end");
+		return parentFileName;
 	}
 
 	/**
