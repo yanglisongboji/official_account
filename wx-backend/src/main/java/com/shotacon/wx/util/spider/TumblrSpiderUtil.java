@@ -231,17 +231,19 @@ public class TumblrSpiderUtil {
 		String videoCollect = videoList.stream().collect(Collectors.joining("\\\n"));
 		String imageCollect = imageList.stream().collect(Collectors.joining("\\\n"));
 
-		Path videoPath = Paths.get(fileName + "_video.txt");
+		Path videoPath = Paths.get(fileName.split(".")[0] + "_video.txt");
 		if (!Files.exists(videoPath)) {
+			log.info("Path not exists, create!");
 			Files.createFile(videoPath);
 		}
-		Files.write(Paths.get(fileName + "_video.txt"), videoCollect.getBytes());
+		Files.write(videoPath, videoCollect.getBytes());
 
-		Path imagePath = Paths.get(fileName + "_image.txt");
+		Path imagePath = Paths.get(fileName.split(".")[0] + "_image.txt");
 		if (!Files.exists(imagePath)) {
+			log.info("Path not exists, create!");
 			Files.createFile(imagePath);
 		}
-		Files.write(Paths.get(fileName + "_image.txt"), imageCollect.getBytes());
+		Files.write(imagePath, imageCollect.getBytes());
 	}
 
 	static String getHtml(String strUrl) throws Exception {
