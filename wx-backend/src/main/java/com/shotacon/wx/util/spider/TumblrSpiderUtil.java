@@ -1,6 +1,7 @@
 package com.shotacon.wx.util.spider;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -175,7 +176,7 @@ public class TumblrSpiderUtil {
 					} else {
 						Set<String> imageUrl = getImageUrl(post);
 						if (imageUrl.size() > 0) {
-							urlImageList.addAll(getImageUrl(post));
+							urlImageList.addAll(imageUrl);
 							break;
 						}
 					}
@@ -220,30 +221,29 @@ public class TumblrSpiderUtil {
 	}
 
 	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) throws IOException {
+		log.info("begin getAllDownload");
 		Set<String> videoList = mediaList.get("video");
 		Set<String> imageList = mediaList.get("image");
 
-		if (videoList.size() == 0 || imageList.size() == 0) {
-			log.info("there is no media url");
-			return;
+		if (videoList.size() != 0) {
+			log.info("write video url");
+			Path videoPath = Paths.get(fileName + "_video.txt");
+			if (!Files.exists(videoPath)) {
+				log.info("Path not exists, create!");
+				Files.createFile(videoPath);
+			}
+			Files.write(videoPath, videoList, StandardCharsets.UTF_8);
+		}
+		if (imageList.size() != 0) {
+			log.info("write image url");
+			Path imagePath = Paths.get(fileName + "_image.txt");
+			if (!Files.exists(imagePath)) {
+				log.info("Path not exists, create!");
+				Files.createFile(imagePath);
+			}
+			Files.write(imagePath, imageList, StandardCharsets.UTF_8);
 		}
 
-		String videoCollect = videoList.stream().collect(Collectors.joining("\\\n"));
-		String imageCollect = imageList.stream().collect(Collectors.joining("\\\n"));
-
-		Path videoPath = Paths.get(fileName.split(".")[0] + "_video.txt");
-		if (!Files.exists(videoPath)) {
-			log.info("Path not exists, create!");
-			Files.createFile(videoPath);
-		}
-		Files.write(videoPath, videoCollect.getBytes());
-
-		Path imagePath = Paths.get(fileName.split(".")[0] + "_image.txt");
-		if (!Files.exists(imagePath)) {
-			log.info("Path not exists, create!");
-			Files.createFile(imagePath);
-		}
-		Files.write(imagePath, imageCollect.getBytes());
 	}
 
 	static String getHtml(String strUrl) throws Exception {
