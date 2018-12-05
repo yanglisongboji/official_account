@@ -82,7 +82,7 @@ public class TumblrSpiderUtil {
 						getAllDownload(mediaList, fileName);
 						countDownLatch.countDown();
 					} catch (IOException e) {
-						System.out.println("main execute exception url=" + url + ",error" + e.getMessage());
+						log.info("main execute exception url=" + url + ",error: " + e.getMessage());
 					}
 				}
 			});
@@ -112,7 +112,7 @@ public class TumblrSpiderUtil {
 	 */
 	static Set<String> getAllPostByUrl(String url, String month) {
 
-		log.info("getAllPostByUrl begin with {}", url);
+		log.info("begin getAllPostByUrl ---> url: {}, month: {}", url, month);
 		Set<String> urlPostList = new HashSet<String>();
 
 		String yearMonth = month.replace("/", "");
@@ -141,7 +141,7 @@ public class TumblrSpiderUtil {
 			log.error("getAllPostByUrl error: {}", e.getMessage());
 		}
 
-		log.info("getAllPostByUrl end with {}, urlPostList size: {}", url, urlPostList.size());
+		log.info("end getAllPostByUrl ---> url: {}, urlPostList size: {}", url, urlPostList.size());
 		return urlPostList;
 	}
 
@@ -153,7 +153,7 @@ public class TumblrSpiderUtil {
 	 */
 	static Map<String, Set<String>> handlePostList(Set<String> urlPostList) {
 
-		log.info("handlePostList begin with postList, size: {}", urlPostList.size());
+		log.info("begin handlePostList with postList, size: {}", urlPostList.size());
 		Set<String> urlVideoList = new HashSet<String>();
 		Set<String> urlImageList = new HashSet<String>();
 
@@ -162,7 +162,7 @@ public class TumblrSpiderUtil {
 			try {
 				html = getHtml(post);
 				int count = 1;
-				log.info("handle the {} url, src: {}", count, post);
+				log.info("handle the {}th url, src: {}", count, post);
 				count++;
 				Elements elements = Jsoup.parse(html).getElementsByTag("iframe");
 				for (int i = 0; i < elements.size(); i++) {
@@ -170,7 +170,6 @@ public class TumblrSpiderUtil {
 					String src = e.attr("src");
 					if (StringUtils.isNotEmpty(src) && src.contains(video)) {
 						urlVideoList.add(getDocByUrl(src).getElementsByTag("source").attr("src"));
-						log.info("urlVideoList +1, size: {} ", urlVideoList.size());
 						break;
 					} else {
 						Set<String> imageUrl = getImageUrl(post);
@@ -181,11 +180,11 @@ public class TumblrSpiderUtil {
 					}
 				}
 			} catch (Exception e) {
-				log.error("handlePostList with {} error: {}", post, e.getMessage());
+				log.error("handlePostList with {},  error: {}", post, e.getMessage());
 			}
 		});
 
-		log.info("handlePostList end, urlVideoList size: {}", urlPostList.size());
+		log.info("end handlePostList, urlVideoList size: {}", urlPostList.size());
 		Map<String, Set<String>> result = new HashMap<>();
 		result.put("video", urlVideoList);
 		result.put("image", urlImageList);
@@ -199,7 +198,7 @@ public class TumblrSpiderUtil {
 	 * 
 	 */
 	public static Set<String> getImageUrl(String url) throws Exception {
-		log.info("getImageUrl begin");
+		log.info("begin getImageUrl");
 		Set<String> imageUrlStrList = new HashSet<>();
 
 		Jsoup.parse(getHtml(url)).getElementsByClass("posts").forEach(posts -> {
@@ -215,7 +214,7 @@ public class TumblrSpiderUtil {
 			imageUrlStrList.addAll(elementsBytag.stream().map(e -> e.attr("src")).collect(Collectors.toList()));
 		}
 
-		log.info("getImageUrl end with {} pic", imageUrlStrList.size());
+		log.info("end getImageUrl with {} pic", imageUrlStrList.size());
 		return imageUrlStrList;
 	}
 
