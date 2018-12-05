@@ -6,11 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TumblrUtil {
 
 	private final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * 获取month个月的日期格式：yyyy/M
@@ -41,8 +43,16 @@ public class TumblrUtil {
 	}
 
 	public static long getFirstDayMillisecondsByMonth(String month) {
-		return LocalDateTime.parse(month.replace("/", "-") + "-01 00:00:00", dtf).toInstant(ZoneOffset.of("+8"))
-				.toEpochMilli();
+		String time = month.replace("/", "-") + "-01";
+		Date parse = new Date();
+		try {
+			parse = sdf.parse(time);
+		} catch (ParseException e) {
+			log.error("Date format error");
+		}
+		return parse.getTime();
+//		return LocalDateTime.parse(month.replace("/", "-") + "-01 00:00:00", dtf).toInstant(ZoneOffset.of("+8"))
+//				.toEpochMilli();
 	}
 
 	public static List<String> getAllDateByMonthString(String monthStr) {

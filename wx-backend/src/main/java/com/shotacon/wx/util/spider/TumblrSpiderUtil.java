@@ -72,7 +72,7 @@ public class TumblrSpiderUtil {
 		for (String month : monthList) {
 
 			final long beforeTime = TumblrUtil.getFirstDayMillisecondsByMonth(month);
-			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month + "/?before_time=" + beforeTime;
+			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month;// + "/?before_time=" + beforeTime;
 //			final String url = TumblrUtil.getUrl(homeUrl) + "archive/?before_time=" + beforeTime;
 			final String fileName = TumblrUtil.getFile(parentFileName, month);
 			es.submit(new Runnable() {
@@ -158,7 +158,7 @@ public class TumblrSpiderUtil {
 		Set<String> urlVideoList = new HashSet<String>();
 		Set<String> urlImageList = new HashSet<String>();
 
-		for (String post : urlImageList) {
+		for (String post : urlPostList) {
 			String html;
 			try {
 				html = getHtml(post);
