@@ -1,22 +1,23 @@
 package com.shotacon.wx.util.spider;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 
@@ -35,62 +36,51 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.io.Files;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TumblrSpiderUtil {
 
-	private static final String video = "/video/";
-	private static final String download = "/video_file/";
+	private final static String video = "/video/";
+	private final static String filePath = "/data/temp";
 	private static String homeUrl;
-	private static String filePath;
-	private static Integer monthNum;
 	private static boolean proxy = false;
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("请输入需要爬虫的tumblr博客名：");
-		Scanner scanner = new Scanner(System.in);
-		homeUrl = "https://".concat(scanner.next()).concat(".tumblr.com");
-		System.out.println("请输入结果输出文件(默认E:\\文件\\tumblr\\，输入0)：");
-		filePath = scanner.next();
-		if ("0".equals(filePath)) {
-			filePath = "E:\\\\文件\\\\tumblr\\\\";
-		}
-		System.out.println("按年月爬取(0)?按月数爬取(1)?");
-		List<String> monthList = new ArrayList<String>();
-		Integer type = scanner.nextInt();
-		if (0 == type) {
-			System.out.println("请输入爬取年月(yyyy/M)，多个用逗号分隔:");
-			String monthStr = scanner.next();
-			monthList = TumblrUtil.getAllDateByMonthString(monthStr);
-			monthNum = monthList.size();
-		} else if (1 == type) {
-			System.out.println("请输入爬取月数:");
-			monthNum = scanner.nextInt();
-			monthList = TumblrUtil.getAllDateByMonth(monthNum);
-		}
+		doSpider("https://sexyteenboyss.tumblr.com", 12);
+	}
 
-		System.out.println("是否使用代理(127.0.0.1:1080)?y/n");
-		String str = scanner.next();
-		if ("y".equalsIgnoreCase(str)) {
-			proxy = true;
-		}
+	public static void doSpider(String postUrl, int monthNum) {
+
+		homeUrl = postUrl;
+		List<String> monthList = new ArrayList<String>();
+		monthList = TumblrUtil.getAllDateByMonth(monthNum);
+
+		String userName = TumblrUtil.getUsernameByUrl(homeUrl);
+		String parentFileName = TumblrUtil.getParentFile(filePath, userName);
 
 		final CountDownLatch countDownLatch = new CountDownLatch(monthNum);
 		ExecutorService es = Executors.newFixedThreadPool(monthNum);
-		String userName = TumblrUtil.getUsernameByUrl(homeUrl);
-		String parentFileName = TumblrUtil.getParentFile(filePath, userName);
+
 		for (String month : monthList) {
-			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month;
+
+			final long beforeTime = TumblrUtil.getFirstDayMillisecondsByMonth(month);
+			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month + "/?before_time=" + beforeTime;
+//			final String url = TumblrUtil.getUrl(homeUrl) + "archive/?before_time=" + beforeTime;
 			final String fileName = TumblrUtil.getFile(parentFileName, month);
 			es.submit(new Runnable() {
 				public void run() {
 					try {
-						Set<String> postList = getAllPostByMonth(url);
-						Set<String> videoList = getAllVideoByMonth(postList);
-						getAllDownload(videoList, fileName);
+						Map<String, Set<String>> mediaList = handlePostList(getAllPostByUrl(url));
+						getAllDownload(mediaList, fileName);
 						countDownLatch.countDown();
 					} catch (IOException e) {
 						System.out.println("main execute exception url=" + url + ",error" + e.getMessage());
@@ -102,21 +92,26 @@ public class TumblrSpiderUtil {
 			countDownLatch.await();
 			es.shutdown();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error("ExecutorService shutdown error: {}", e.getMessage());
 		}
 		// 合并文件
-		System.out.println("main merge files begin");
-		TumblrUtil.mergeFiles(parentFileName);
-		System.out.print("main execute end");
+		log.info("main merge files begin");
+		try {
+			TumblrUtil.mergeFiles(parentFileName);
+		} catch (IOException e) {
+			log.error("mergeFiles error: {}", e.getMessage());
+		}
+		log.info("main execute end");
 	}
 
 	/**
-	 * 获取其中一个月的所有Post
+	 * 根据url获取所有post
 	 * 
 	 * @param url
 	 */
-	private static Set<String> getAllPostByMonth(String url) {
-		System.out.println("getAllPostByUrl begin :" + url);
+	static Set<String> getAllPostByUrl(String url) {
+
+		log.info("getAllPostByUrl begin with {}", url);
 		Set<String> urlPostList = new HashSet<String>();
 		String post = TumblrUtil.getUrl(homeUrl) + "post/";
 		try {
@@ -131,74 +126,91 @@ public class TumblrSpiderUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("getAllPostByMonth exception:" + url + ",error" + e.getMessage());
+			log.error("getAllPostByUrl error: {}", e.getMessage());
 		}
-		System.out.println("getAllPostByUrl end size=:" + urlPostList.size());
+
+		log.info("getAllPostByUrl end with {}, urlPostList size: {}", url, urlPostList.size());
 		return urlPostList;
 	}
 
 	/**
-	 * 获取一个月的video页面
+	 * 根据post列表获取所有多媒体
 	 * 
 	 * @param urlPostList
 	 * @return
 	 */
-	private static Set<String> getAllVideoByMonth(Set<String> urlPostList) {
+	static Map<String, Set<String>> handlePostList(Set<String> urlPostList) {
+
+		log.info("handlePostList begin with postList, size: {}", urlPostList.size());
 		Set<String> urlVideoList = new HashSet<String>();
-		System.out.println("getAllVideoByMonth begin");
-		for (String urlPost : urlPostList) {
+		Set<String> urlImageList = new HashSet<String>();
+
+		urlPostList.forEach(post -> {
+			String html;
 			try {
-				String html = getHtml(urlPost);
-				Document doc = Jsoup.parse(html);
-				Elements elements = doc.getElementsByTag("iframe");
+				html = getHtml(post);
+				int count = 1;
+				log.info("handle the {} url, src: {}", count, post);
+				count++;
+				Elements elements = Jsoup.parse(html).getElementsByTag("iframe");
 				for (int i = 0; i < elements.size(); i++) {
 					Element e = elements.get(i);
 					String src = e.attr("src");
 					if (StringUtils.isNotEmpty(src) && src.contains(video)) {
-						urlVideoList.add(src);
+						urlVideoList.add(getDocByUrl(src).getElementsByTag("source").attr("src"));
+						log.info("urlVideoList add one, size: {} ", urlVideoList.size());
+					} else {
+						urlImageList.addAll(getImageUrl(post));
 					}
 				}
 			} catch (Exception e) {
-				System.out.println("getAllVideoByMonth exception:" + urlPost + ",error" + e.getMessage());
+				log.error("handlePostList with {} error: {}", post, e.getMessage());
 			}
-		}
-		System.out.println("getAllVideoByMonth end size=" + urlVideoList.size());
-		return urlVideoList;
+		});
+
+		log.info("handlePostList end, urlVideoList size: {}", urlPostList.size());
+		Map<String, Set<String>> result = new HashMap<>();
+		result.put("video", urlVideoList);
+		result.put("image", urlImageList);
+		return result;
 	}
 
-	private static void getAllDownload(Set<String> urlVideoList, String fileName) throws IOException {
-		if (urlVideoList.size() == 0) {
-			System.out.println("getAllDownload end empty");
+	/**
+	 * 获取连接中的图片
+	 * 
+	 * @throws Exception
+	 * 
+	 */
+	public static List<String> getImageUrl(String url) throws Exception {
+		log.info("getImageUrl begin with {}", url);
+		List<String> imageUrlStrList = new ArrayList<>();
+
+		Jsoup.parse(getHtml(url)).getElementsByClass("posts").forEach(posts -> {
+			imageUrlStrList.addAll(
+					posts.getElementsByTag("img").stream().map(e -> e.attr("src")).collect(Collectors.toList()));
+		});
+
+		log.info("getImageUrl end with {} pic", imageUrlStrList.size());
+		return imageUrlStrList;
+	}
+
+	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) throws IOException {
+		Set<String> videoList = mediaList.get("video");
+		Set<String> imageList = mediaList.get("image");
+
+		if (videoList.size() == 0 || imageList.size() == 0) {
+			log.info("there is no media url");
 			return;
 		}
-		File file = new File(fileName);
-		TumblrUtil.createNewFile(file);
-		BufferedWriter br = new BufferedWriter(new FileWriter(file));
-		for (String urlVideo : urlVideoList) {
-			try {
-				String html = getHtml(urlVideo);
-				Document doc = Jsoup.parse(html);
-				Elements elements = doc.getElementsByTag("source");
-				for (int i = 0; i < elements.size(); i++) {
-					Element e = elements.get(i);
-					String src = e.attr("src");
-					if (StringUtils.isNotEmpty(src) && src.contains(download)) {
-						System.out.println(src);
-						br.write(src);
-						br.write("\r\n");
-						br.flush();
-					}
-				}
-			} catch (Exception e) {
-				System.out.println("getAllDownload exception:" + urlVideo + ",error" + e.getMessage());
-			}
-		}
-		br.close();
-		System.out.println("getAllDownload end");
+
+		String videoCollect = videoList.stream().collect(Collectors.joining("\\\n"));
+		String imageCollect = imageList.stream().collect(Collectors.joining("\\\n"));
+		Files.write(videoCollect, new File(fileName + "_video.txt"), StandardCharsets.UTF_8);
+		Files.write(imageCollect, new File(fileName + "_image.txt"), StandardCharsets.UTF_8);
+
 	}
 
-	private static String getHtml(String strUrl) throws Exception {
+	static String getHtml(String strUrl) throws Exception {
 		String str = null;
 		if (proxy) {
 			String proxyHost = "127.0.0.1";
@@ -236,5 +248,21 @@ public class TumblrSpiderUtil {
 		}).build();
 		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
 		return sslsf;
+	}
+
+	/**
+	 * 获取链接，并且处理异常
+	 *
+	 * @param url 待获取的链接
+	 * @return
+	 */
+	static Document getDocByUrl(String url) {
+		Connection connect = Jsoup.connect(url);
+		try {
+			return connect.get();
+		} catch (IOException e) {
+			log.error("Jsoup get connection error, {}", e.getMessage());
+		}
+		return null;
 	}
 }
