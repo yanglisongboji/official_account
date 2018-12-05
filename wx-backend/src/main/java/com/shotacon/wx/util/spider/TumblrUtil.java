@@ -99,7 +99,8 @@ public class TumblrUtil {
 	}
 
 	public static String mergeFiles(String parentFilePath) throws IOException {
-		Set<String> linesSet = new HashSet<String>();
+		Set<String> videoSet = new HashSet<String>();
+		Set<String> imageSet = new HashSet<String>();
 		Path parentpath = Paths.get(parentFilePath);
 		if (!Files.exists(parentpath)) {
 			Files.createDirectory(parentpath);
@@ -108,16 +109,22 @@ public class TumblrUtil {
 		Files.list(parentpath).forEach(path -> {
 			try {
 				if (!path.getFileName().equals(parentpath.getFileName())) {
-					linesSet.addAll(Files.readAllLines(path));
+					if (path.getFileName().toString().contains("image")) {
+						imageSet.addAll(Files.readAllLines(path));
+					} else {
+						videoSet.addAll(Files.readAllLines(path));
+					}
 				}
 			} catch (IOException e) {
 				log.info("File {} readAllLines error: {}", path.getFileName(), e.getMessage());
 			}
 		});
 
-		Path finalFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + ".txt");
-		Files.write(finalFile, linesSet, StandardCharsets.UTF_8);
-		return finalFile.toAbsolutePath().toString();
+		Path imageFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_image.txt");
+		Path videoFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_video.txt");
+		Files.write(imageFile, imageSet, StandardCharsets.UTF_8);
+		Files.write(videoFile, videoSet, StandardCharsets.UTF_8);
+		return imageFile.toAbsolutePath().toString();
 	}
 
 	public static void main(String[] args) throws IOException {
