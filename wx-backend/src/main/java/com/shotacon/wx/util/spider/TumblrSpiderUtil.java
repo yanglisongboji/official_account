@@ -54,7 +54,7 @@ public class TumblrSpiderUtil {
 	private static boolean proxy = false;
 
 	public static void main(String[] args) throws IOException {
-		doSpider("https://lookingforveins2.tumblr.com", 12);
+		doSpider("https://lookingforveins2.tumblr.com", 20);
 	}
 
 	public static String doSpider(String postUrl, int monthNum) {
@@ -158,7 +158,7 @@ public class TumblrSpiderUtil {
 		Set<String> urlVideoList = new HashSet<String>();
 		Set<String> urlImageList = new HashSet<String>();
 
-		urlPostList.forEach(post -> {
+		for (String post : urlImageList) {
 			String html;
 			try {
 				html = getHtml(post);
@@ -183,7 +183,7 @@ public class TumblrSpiderUtil {
 			} catch (Exception e) {
 				log.error("handlePostList with {},  error: {}", post, e.getMessage());
 			}
-		});
+		}
 
 		log.info("end handlePostList, urlVideoList size: {}", urlPostList.size());
 		Map<String, Set<String>> result = new HashMap<>();
