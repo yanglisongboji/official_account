@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -75,7 +76,7 @@ public class SignatureUtil {
 		xstream.processAnnotations(MessageEntity.class);
 		xstream.alias("xml", MessageEntity.class);
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
-		MessageEntity reMessage = message.clone();
+		MessageEntity reMessage = ObjectUtils.clone(message);
 		log.info(message.toString());
 		if (StringUtils.isNotEmpty(message.getContent()) && message.getContent().contains("http")) {
 			String content = message.getContent();

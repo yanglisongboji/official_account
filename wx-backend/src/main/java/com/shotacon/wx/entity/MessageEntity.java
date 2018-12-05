@@ -145,7 +145,9 @@ public class MessageEntity implements Cloneable {
 	@XStreamAlias("MsgId")
 	private Long msgId;
 
-	public MessageEntity clone() throws CloneNotSupportedException {
-		return ObjectUtils.clone(this);
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
+
 }

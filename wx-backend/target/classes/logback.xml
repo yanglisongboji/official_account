@@ -4,7 +4,7 @@
 	<property name="PATTERN"
 		value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
 	<!-- 文件路径 -->
-	<property name="LOG_FILE_PATH" value="/Users/Shotacon/opt/logs/shotacon/OfficialAccount" />
+	<property name="LOG_FILE_PATH" value="/data/logs/shotacon/OfficialAccount" />
 
 	<appender name="PROD_FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
