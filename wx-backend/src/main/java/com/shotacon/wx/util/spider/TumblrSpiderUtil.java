@@ -1,8 +1,8 @@
 package com.shotacon.wx.util.spider;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -41,8 +41,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import com.google.common.io.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -231,9 +229,9 @@ public class TumblrSpiderUtil {
 
 		String videoCollect = videoList.stream().collect(Collectors.joining("\\\n"));
 		String imageCollect = imageList.stream().collect(Collectors.joining("\\\n"));
-		Files.write(videoCollect, new File(fileName + "_video.txt"), StandardCharsets.UTF_8);
-		Files.write(imageCollect, new File(fileName + "_image.txt"), StandardCharsets.UTF_8);
-
+		
+		Files.write(Paths.get(fileName + "_video.txt"), videoCollect.getBytes());
+		Files.write(Paths.get(fileName + "_image.txt"), imageCollect.getBytes());
 	}
 
 	static String getHtml(String strUrl) throws Exception {
