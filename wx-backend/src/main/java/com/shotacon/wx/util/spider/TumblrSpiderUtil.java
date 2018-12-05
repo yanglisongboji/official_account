@@ -2,6 +2,7 @@ package com.shotacon.wx.util.spider;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -229,8 +230,17 @@ public class TumblrSpiderUtil {
 
 		String videoCollect = videoList.stream().collect(Collectors.joining("\\\n"));
 		String imageCollect = imageList.stream().collect(Collectors.joining("\\\n"));
-		
+
+		Path videoPath = Paths.get(fileName + "_video.txt");
+		if (!Files.exists(videoPath)) {
+			Files.createFile(videoPath);
+		}
 		Files.write(Paths.get(fileName + "_video.txt"), videoCollect.getBytes());
+
+		Path imagePath = Paths.get(fileName + "_image.txt");
+		if (!Files.exists(imagePath)) {
+			Files.createFile(imagePath);
+		}
 		Files.write(Paths.get(fileName + "_image.txt"), imageCollect.getBytes());
 	}
 
