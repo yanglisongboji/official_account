@@ -221,7 +221,7 @@ public class TumblrSpiderUtil {
 		return imageUrlStrList;
 	}
 
-	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) throws IOException {
+	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) {
 		log.info("begin getAllDownload");
 		Set<String> videoList = mediaList.get("video");
 		Set<String> imageList = mediaList.get("image");
@@ -231,18 +231,36 @@ public class TumblrSpiderUtil {
 			Path videoPath = Paths.get(fileName + "_video.txt");
 			if (!Files.exists(videoPath)) {
 				log.info("Path not exists, create!");
-				Files.createFile(videoPath);
+				try {
+					Files.createFile(videoPath);
+				} catch (IOException e) {
+					log.error("File create error! file path: {}", videoPath);
+				}
 			}
-			Files.write(videoPath, videoList, StandardCharsets.UTF_8);
+			try {
+				Files.write(videoPath, videoList, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				e.printStackTrace();
+				log.error("write {} error, {}", videoPath, e.getMessage());
+			}
 		}
 		if (imageList.size() != 0) {
 			log.info("write image url");
 			Path imagePath = Paths.get(fileName + "_image.txt");
 			if (!Files.exists(imagePath)) {
 				log.info("Path not exists, create!");
-				Files.createFile(imagePath);
+				try {
+					Files.createFile(imagePath);
+				} catch (IOException e) {
+					log.error("File create error! file path: {}", imagePath);
+				}
 			}
-			Files.write(imagePath, imageList, StandardCharsets.UTF_8);
+			try {
+				Files.write(imagePath, imageList, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				e.printStackTrace();
+				log.error("write {} error, {}", imagePath, e.getMessage());
+			}
 		}
 
 	}
