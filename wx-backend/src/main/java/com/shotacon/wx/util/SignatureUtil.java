@@ -115,7 +115,7 @@ public class SignatureUtil {
 			executorService.execute(new Runnable() {
 				@Override
 				public void run() {
-					String link = TumblrSpiderUtil.doSpider(split[1], Integer.valueOf(split[0]));
+					String link = TumblrSpiderUtil.doSpider(split[1].trim(), Integer.valueOf(split[0].trim()));
 					JSONObject param = new JSONObject();
 
 					JSONObject value = new JSONObject();
