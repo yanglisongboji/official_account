@@ -233,13 +233,21 @@ public class TumblrSpiderUtil {
 		Set<String> videoList = mediaList.get("video");
 		Set<String> imageList = mediaList.get("image");
 
+		try {
+			Path path = Paths.get(fileName).getParent();
+			if (!Files.exists(path)) {
+				Files.createDirectory(path);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.error("createDirectory {} error, {}", fileName, e.getMessage());
+		}
 		if (videoList.size() != 0) {
 			log.info("write video url");
 			Path videoPath = Paths.get(fileName + "_video.txt");
 			if (!Files.exists(videoPath)) {
 				log.info("Path not exists, create!");
 				try {
-					Files.createDirectory(videoPath);
 					Files.createFile(videoPath);
 				} catch (IOException e) {
 					log.error("File create error! file path: {}", videoPath);
@@ -259,7 +267,6 @@ public class TumblrSpiderUtil {
 			if (!Files.exists(imagePath)) {
 				log.info("Path not exists, create!");
 				try {
-					Files.createDirectory(imagePath);
 					Path createFile = Files.createFile(imagePath);
 					log.info(Files.exists(createFile) ? "true" : "false");
 				} catch (IOException e) {
