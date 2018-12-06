@@ -235,6 +235,7 @@ public class TumblrSpiderUtil {
 			if (!Files.exists(videoPath)) {
 				log.info("Path not exists, create!");
 				try {
+					Files.createDirectory(videoPath);
 					Files.createFile(videoPath);
 				} catch (IOException e) {
 					log.error("File create error! file path: {}", videoPath);
@@ -254,6 +255,7 @@ public class TumblrSpiderUtil {
 			if (!Files.exists(imagePath)) {
 				log.info("Path not exists, create!");
 				try {
+					Files.createDirectory(imagePath);
 					Path createFile = Files.createFile(imagePath);
 					log.info(Files.exists(createFile) ? "true" : "false");
 				} catch (IOException e) {
