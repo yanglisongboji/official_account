@@ -238,7 +238,8 @@ public class TumblrSpiderUtil {
 				}
 			}
 			try {
-				Files.write(videoPath, videoList, StandardCharsets.UTF_8);
+				Files.write(Files.exists(videoPath) ? videoPath : Files.createFile(videoPath), videoList,
+						StandardCharsets.UTF_8);
 			} catch (IOException e) {
 				e.printStackTrace();
 				log.error("write {} error, {}", videoPath, e.getMessage());
@@ -250,13 +251,15 @@ public class TumblrSpiderUtil {
 			if (!Files.exists(imagePath)) {
 				log.info("Path not exists, create!");
 				try {
-					Files.createFile(imagePath);
+					Path createFile = Files.createFile(imagePath);
+					log.info(Files.exists(createFile) ? "true" : "false");
 				} catch (IOException e) {
 					log.error("File create error! file path: {}", imagePath);
 				}
 			}
 			try {
-				Files.write(imagePath, imageList, StandardCharsets.UTF_8);
+				Files.write(Files.exists(imagePath) ? imagePath : Files.createFile(imagePath), imageList,
+						StandardCharsets.UTF_8);
 			} catch (IOException e) {
 				e.printStackTrace();
 				log.error("write {} error, {}", imagePath, e.getMessage());

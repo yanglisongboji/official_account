@@ -42,6 +42,7 @@ public class FileUploadUtil {
 		urlBuffer.append("?api_key").append(WxUrl.wxConfig.getApiKey());
 		urlBuffer.append("&profile_name").append("shotaconXD");
 
+		log.info("registDevice url: {}", urlBuffer.toString());
 		ResponseEntity<JSONObject> response = RestSSLClient.httpsRestTemplate.getForEntity(urlBuffer.toString(),
 				JSONObject.class);
 		if (response.getStatusCode().equals(HttpStatus.OK)) {
@@ -53,7 +54,7 @@ public class FileUploadUtil {
 
 			return deviceKey.getString(Devie.device_key.name());
 		}
-
+		log.error("registDevice fail with {}", response.getStatusCode());
 		return StringUtils.EMPTY;
 	}
 

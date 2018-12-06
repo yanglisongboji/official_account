@@ -134,8 +134,8 @@ public class TumblrUtil {
 		Path imageFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_image.txt");
 		Path videoFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_video.txt");
 		List<File> fileList = new ArrayList<>();
-		fileList.add(Files.write(imageFile, imageSet, StandardCharsets.UTF_8).toFile());
-		fileList.add(Files.write(videoFile, videoSet, StandardCharsets.UTF_8).toFile());
+		fileList.add(Files.write(Files.exists(imageFile)?imageFile:Files.createFile(imageFile), imageSet, StandardCharsets.UTF_8).toFile());
+		fileList.add(Files.write(Files.exists(videoFile)?videoFile:Files.createFile(videoFile), videoSet, StandardCharsets.UTF_8).toFile());
 
 		// 上传
 		return FileUploadUtil.uploadFile(fileList);
