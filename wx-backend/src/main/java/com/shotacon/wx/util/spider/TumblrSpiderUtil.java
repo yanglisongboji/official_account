@@ -60,8 +60,9 @@ public class TumblrSpiderUtil {
 	private static String homeUrl;
 	private static boolean proxy = false;
 
-	public static void main(String[] args) throws IOException {
-		doSpider("https://lookingforveins2.tumblr.com", 20);
+	public static void main(String[] args) throws Exception {
+//		doSpider("https://lookingforveins2.tumblr.com", 20);
+		getImageUrl("http://just-an-insane-boy.tumblr.com/post/170039156693");
 	}
 
 	public static String doSpider(String postUrl, int monthNum) {
@@ -211,13 +212,15 @@ public class TumblrSpiderUtil {
 			imageUrlStrList.addAll(
 					posts.getElementsByTag("img").stream().map(e -> e.attr("src")).collect(Collectors.toList()));
 		});
-		// photo-wrapper
-		Elements elementsByClass = Jsoup.parse(getHtml(url)).getElementsByClass("photo-wrapper-inner");
-		if (null != elementsByClass) {
-			imageUrlStrList.add(elementsByClass.get(0).getElementsByTag("img").get(0).attr("src"));
-		} else {
-			Elements elementsBytag = Jsoup.parse(TumblrSpiderUtil.getHtml(url)).getElementsByTag("img");
-			imageUrlStrList.addAll(elementsBytag.stream().map(e -> e.attr("src")).collect(Collectors.toList()));
+		if(imageUrlStrList.size()==0) {
+			// photo-wrapper
+			Elements elementsByClass = Jsoup.parse(getHtml(url)).getElementsByClass("photo-wrapper-inner");
+			if (null != elementsByClass) {
+				imageUrlStrList.add(elementsByClass.get(0).getElementsByTag("img").get(0).attr("src"));
+			} else {
+				Elements elementsBytag = Jsoup.parse(TumblrSpiderUtil.getHtml(url)).getElementsByTag("img");
+				imageUrlStrList.addAll(elementsBytag.stream().map(e -> e.attr("src")).collect(Collectors.toList()));
+			}
 		}
 
 		log.info("end getImageUrl with {} pic", imageUrlStrList.size());
