@@ -62,7 +62,7 @@ public class TumblrSpiderUtil {
 
 	public static void main(String[] args) throws Exception {
 //		doSpider("https://lookingforveins2.tumblr.com", 20);
-		Set<String> imageUrl = getImageUrl("http://just-an-insane-boy.tumblr.com/post/174664466363");
+		Set<String> imageUrl = getImageUrl("https://lookingforveins2.tumblr.com/post/173153210681");
 		System.out.println(imageUrl);
 	}
 
@@ -223,9 +223,8 @@ public class TumblrSpiderUtil {
 				imageUrlStrList.addAll(elementsBytag.stream().map(e -> e.attr("src")).collect(Collectors.toList()));
 			}
 		}
-
 		log.info("end getImageUrl with {} pic", imageUrlStrList.size());
-		return imageUrlStrList;
+		return imageUrlStrList.stream().filter(i -> !i.contains("avatar")).collect(Collectors.toSet());
 	}
 
 	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) {
