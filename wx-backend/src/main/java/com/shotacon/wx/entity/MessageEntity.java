@@ -137,6 +137,12 @@ public class MessageEntity implements Cloneable {
 	private String ticket;
 
 	/**
+	 * 事件推送的状态
+	 */
+	@XStreamAlias("Status")
+	private String status;
+
+	/**
 	 * 消息id
 	 */
 	@XStreamAlias("MsgId")
@@ -329,6 +335,14 @@ public class MessageEntity implements Cloneable {
 	public void setMsgID(Long msgID) {
 		this.msgID = msgID;
 		this.msgId = msgID;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }
