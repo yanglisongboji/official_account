@@ -39,8 +39,8 @@ public class FileUploadUtil {
 		StringBuffer urlBuffer = new StringBuffer(GET_DEVICE_KEY_URL);
 
 //		urlBuffer.append("?api_key=e5e7a67f51279e43d9dddc5986ed2392fb1b4bba");
-		urlBuffer.append("?api_key").append(WxUrl.wxConfig.getApiKey());
-		urlBuffer.append("&profile_name").append("shotaconXD");
+		urlBuffer.append("?api_key=").append(WxUrl.wxConfig.getApiKey());
+		urlBuffer.append("&profile_name=").append("shotaconXD");
 
 		log.info("registDevice url: {}", urlBuffer.toString());
 		ResponseEntity<JSONObject> response = RestSSLClient.httpsRestTemplate.getForEntity(urlBuffer.toString(),
@@ -62,7 +62,7 @@ public class FileUploadUtil {
 
 		StringBuffer urlBuffer = new StringBuffer(UPLOAD_URL);
 
-		urlBuffer.append("?api_key").append(WxUrl.wxConfig.getApiKey());
+		urlBuffer.append("?api_key=").append(WxUrl.wxConfig.getApiKey());
 //		urlBuffer.append("?api_key=e5e7a67f51279e43d9dddc5986ed2392fb1b4bba");
 		JSONObject map = new JSONObject();
 		JSONArray array = new JSONArray();
