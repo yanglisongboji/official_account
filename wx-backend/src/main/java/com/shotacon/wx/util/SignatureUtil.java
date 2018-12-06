@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +20,7 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.entity.MessageEntity;
@@ -88,17 +92,37 @@ public class SignatureUtil {
 			executorService.execute(new Runnable() {
 				@Override
 				public void run() {
-					String filePath = TumblrSpiderUtil.doSpider(split[1], Integer.valueOf(split[0]));
-					try {
-						Files.write(Paths.get(filePath + message.getFromUserName()), null, StandardCharsets.UTF_8);
-					} catch (IOException e) {
-						log.error("write file error : {}", e.getMessage());
-					}
+					String link = TumblrSpiderUtil.doSpider(split[1], Integer.valueOf(split[0]));
+					JSONObject param = new JSONObject();
+
+					JSONObject value = new JSONObject();
+					value.put("value", link);
+					value.put("color", "#173177");
+					param.put("link", value);
+
+					value = new JSONObject();
+					value.put("value", LocalDateTime.now().toString());
+					value.put("color", "#173177");
+					param.put("time", value);
+					sendTemplate(param, message);
 				}
 			});
 			reMessage.setContent("提交成功, 等待推送结果.");
 		}
 		return SignatureUtil.sendTextMsg(reMessage);
+	}
+
+	public static void sendTemplate(JSONObject param, MessageEntity message) {
+		JSONObject send = new JSONObject();
+		send.put("touser", message.getFromUserName());
+		send.put("template_id", WxUrl.wxConfig.getTemplateIdForNotice());
+		send.put("url", param.getJSONObject("link").getString("value"));
+		send.put("data", param);
+
+		JSONObject body = RestSSLClient.httpsRestTemplate
+				.postForEntity(WxUrl.POST_SEND_TEMPLATE_URL(), send.toJSONString(), JSONObject.class).getBody();
+		log.info("Send template message to {} success, {}", message.getFromUserName(), body.toJSONString());
+
 	}
 
 	/**

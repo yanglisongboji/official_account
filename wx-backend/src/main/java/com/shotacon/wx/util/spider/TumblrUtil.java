@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.shotacon.wx.util.FileUploadUtil;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -132,9 +134,12 @@ public class TumblrUtil {
 
 		Path imageFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_image.txt");
 		Path videoFile = Paths.get(parentFilePath + File.separator + parentpath.getFileName() + "_video.txt");
-		Files.write(imageFile, imageSet, StandardCharsets.UTF_8);
-		Files.write(videoFile, videoSet, StandardCharsets.UTF_8);
-		return imageFile.toAbsolutePath().toString();
+		List<File> fileList = new ArrayList<>();
+		fileList.add(Files.write(imageFile, imageSet, StandardCharsets.UTF_8).toFile());
+		fileList.add(Files.write(videoFile, videoSet, StandardCharsets.UTF_8).toFile());
+
+		// 上传
+		return FileUploadUtil.uploadFile(fileList);
 	}
 
 	public static void main(String[] args) throws IOException {

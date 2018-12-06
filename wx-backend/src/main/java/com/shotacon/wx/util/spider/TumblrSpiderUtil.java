@@ -72,7 +72,7 @@ public class TumblrSpiderUtil {
 
 		for (String month : monthList) {
 
-			final long beforeTime = TumblrUtil.getFirstDayMillisecondsByMonth(month);
+//			final long beforeTime = TumblrUtil.getFirstDayMillisecondsByMonth(month);
 			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month;// + "/?before_time=" + beforeTime;
 //			final String url = TumblrUtil.getUrl(homeUrl) + "archive/?before_time=" + beforeTime;
 			final String fileName = TumblrUtil.getFile(parentFileName, month);
@@ -97,13 +97,14 @@ public class TumblrSpiderUtil {
 		}
 		// 合并文件
 		log.info("main merge files begin");
+		String link = StringUtils.EMPTY;
 		try {
-			TumblrUtil.mergeFiles(parentFileName);
+			link = TumblrUtil.mergeFiles(parentFileName);
 		} catch (IOException e) {
 			log.error("mergeFiles error: {}", e.getMessage());
 		}
 		log.info("main execute end");
-		return parentFileName;
+		return link;
 	}
 
 	/**

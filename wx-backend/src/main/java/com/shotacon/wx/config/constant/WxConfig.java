@@ -17,5 +17,10 @@ public class WxConfig {
 	private String appsecret;
 	@Value("${wx.encodingAESKey}")
 	private String encodingAESKey;
+	@Value("${wx.noticeTemplateId}")
+	private String templateIdForNotice;
+
+	@Value("${send.apiKey}")
+	private String apiKey;
 
 }
