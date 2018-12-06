@@ -123,27 +123,34 @@ public class TumblrSpiderUtil {
 
 		log.info("begin getAllPostByUrl ---> url: {}, month: {}", url, month);
 		Set<String> urlPostList = new HashSet<String>();
+		List<Elements> eleList = new ArrayList<>();
 
 		String yearMonth = month.replace("/", "");
 		String post = TumblrUtil.getUrl(homeUrl) + "post/";
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
-			Elements elements = doc.getElementsByTag("section");
-			for (int i = 0; i < elements.size(); i++) {
-				// section
-				Element section = elements.get(i);
-				if (section.id().contains("posts_") && section.id().endsWith(yearMonth)) {
-					Elements elementsByTag = section.getElementsByTag("a");
-					elementsByTag.forEach(elementByTag -> {
-						String aHref = elementByTag.attr("href");
-						if (StringUtils.isNotEmpty(aHref) && aHref.startsWith(post)) {
-							urlPostList.add(aHref);
-						}
-					});
-					break;
+			eleList.add(doc.getElementsByTag("section"));
+			for (int i = 0; i < 4; i++) {
+				String html1 = TumblrSpiderUtil.getHtml(
+						url + "?before_time=" + doc.getElementById("next_page_link").attr("href").split("=")[1]);
+				eleList.add(Jsoup.parse(html1).getElementsByTag("section"));
+			}
+			for (Elements elements : eleList) {
+				for (int i = 0; i < elements.size(); i++) {
+					// section
+					Element section = elements.get(i);
+					if (section.id().contains("posts_") && section.id().endsWith(yearMonth)) {
+						Elements elementsByTag = section.getElementsByTag("a");
+						elementsByTag.forEach(elementByTag -> {
+							String aHref = elementByTag.attr("href");
+							if (StringUtils.isNotEmpty(aHref) && aHref.startsWith(post)) {
+								urlPostList.add(aHref);
+							}
+						});
+						break;
+					}
 				}
-
 			}
 		} catch (Exception e) {
 			log.error("getAllPostByUrl error: {}", e.getMessage());
