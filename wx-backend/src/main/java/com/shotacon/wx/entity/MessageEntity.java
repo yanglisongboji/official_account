@@ -140,7 +140,7 @@ public class MessageEntity implements Cloneable {
 	/**
 	 * 消息id
 	 */
-	@XStreamAlias("MsgID")
+	@XStreamAlias("MsgId")
 	private Long msgId;
 
 	@Override
