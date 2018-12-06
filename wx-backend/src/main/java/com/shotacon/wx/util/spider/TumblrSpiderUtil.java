@@ -224,13 +224,14 @@ public class TumblrSpiderUtil {
 			}
 		}
 		log.info("end getImageUrl with {} pic", imageUrlStrList.size());
-		return imageUrlStrList.stream().filter(i -> !i.contains("avatar")).collect(Collectors.toSet());
+		return imageUrlStrList;
 	}
 
 	private static void getAllDownload(Map<String, Set<String>> mediaList, String fileName) {
 		log.info("begin getAllDownload");
 		Set<String> videoList = mediaList.get("video");
-		Set<String> imageList = mediaList.get("image");
+		Set<String> imageList = mediaList.get("image").stream().filter(iUrl -> !iUrl.contains("avatar_"))
+				.collect(Collectors.toSet());
 
 		try {
 			Path path = Paths.get(fileName).getParent();
