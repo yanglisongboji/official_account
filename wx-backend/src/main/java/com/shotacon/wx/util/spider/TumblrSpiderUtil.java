@@ -82,7 +82,7 @@ public class TumblrSpiderUtil {
 						Map<String, Set<String>> mediaList = handlePostList(getAllPostByUrl(url, month));
 						getAllDownload(mediaList, fileName);
 						countDownLatch.countDown();
-					} catch (IOException e) {
+					} catch (Exception e) {
 						log.info("main execute exception url=" + url + ",error: " + e.getMessage());
 					}
 				}
