@@ -46,6 +46,12 @@ import org.jsoup.select.Elements;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Tumblr爬虫
+ * 
+ * @author shotacon
+ *
+ */
 @Slf4j
 public class TumblrSpiderUtil {
 
@@ -72,9 +78,7 @@ public class TumblrSpiderUtil {
 
 		for (String month : monthList) {
 
-//			final long beforeTime = TumblrUtil.getFirstDayMillisecondsByMonth(month);
-			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month;// + "/?before_time=" + beforeTime;
-//			final String url = TumblrUtil.getUrl(homeUrl) + "archive/?before_time=" + beforeTime;
+			final String url = TumblrUtil.getUrl(homeUrl) + "archive/" + month;
 			final String fileName = TumblrUtil.getFile(parentFileName, month);
 			es.submit(new Runnable() {
 				public void run() {
@@ -119,7 +123,6 @@ public class TumblrSpiderUtil {
 		Set<String> urlPostList = new HashSet<String>();
 
 		String yearMonth = month.replace("/", "");
-//		String post = TumblrUtil.getUrl("https://lookingforveins2.tumblr.com") + "post/";
 		String post = TumblrUtil.getUrl(homeUrl) + "post/";
 		try {
 			String html = getHtml(url);

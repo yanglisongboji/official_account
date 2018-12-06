@@ -3,10 +3,15 @@ package com.shotacon.wx.entity;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 微信消息实体类
+ * 
+ * @author shotacon
+ *
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -141,6 +146,12 @@ public class MessageEntity implements Cloneable {
 	 */
 	@XStreamAlias("Status")
 	private String status;
+
+	/**
+	 * 菜单id
+	 */
+	@XStreamAlias("MenuId")
+	private String menuId;
 
 	/**
 	 * 消息id
@@ -343,6 +354,14 @@ public class MessageEntity implements Cloneable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getMenuId() {
+		return menuId;
+	}
+
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 }

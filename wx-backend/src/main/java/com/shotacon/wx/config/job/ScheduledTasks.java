@@ -14,6 +14,9 @@ import com.shotacon.wx.util.SignatureUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 定时任务
+ */
 @Slf4j
 @Component
 @EnableAsync
@@ -21,8 +24,9 @@ public class ScheduledTasks {
 
 	public ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-	// 每1小时55分钟执行一次
-//	@Scheduled(cron = "0 */55 0/1  * * * ")
+	/**
+	 * 每1小时55分钟执行一次, 从服务启动1小时后开始
+	 */
 	@Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = (60 + 55) * 1000 * 60)
 	public void reFreshAccessToken() {
 		log.info("Start Refresh Access Token.");

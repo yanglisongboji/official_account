@@ -25,6 +25,12 @@ import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 微信处理类
+ * 
+ * @author shotacon
+ *
+ */
 @Slf4j
 public class SignatureUtil {
 
@@ -32,6 +38,15 @@ public class SignatureUtil {
 
 	private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
+	/**
+	 * 验证url
+	 * 
+	 * @param token
+	 * @param timestamp
+	 * @param nonce
+	 * @param signature
+	 * @return
+	 */
 	public static boolean signature(String token, String timestamp, String nonce, String signature) {
 		String[] arr = new String[] { token, timestamp, nonce };
 		Arrays.sort(arr);
@@ -44,6 +59,11 @@ public class SignatureUtil {
 		return tmpStr != null ? tmpStr.equals(signature.toUpperCase()) : false;
 	}
 
+	/**
+	 * 刷新ac
+	 * 
+	 * @return
+	 */
 	public static String reFreshAccessToken() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("grant_type", "client_credential");
@@ -68,6 +88,15 @@ public class SignatureUtil {
 		return body.toJSONString();
 	}
 
+	/**
+	 * 接受消息
+	 * 
+	 * @param in
+	 * @return
+	 * @throws IOException
+	 * @throws AesException
+	 * @throws CloneNotSupportedException
+	 */
 	public static String acceptMessage(InputStream in) throws IOException, AesException, CloneNotSupportedException {
 		String xml = ByteUtil.inputStreamToString(in);
 		log.info(xml);
@@ -106,6 +135,12 @@ public class SignatureUtil {
 		return SignatureUtil.sendTextMsg(reMessage);
 	}
 
+	/**
+	 * 发送模板消息
+	 * 
+	 * @param param
+	 * @param message
+	 */
 	public static void sendTemplate(JSONObject param, MessageEntity message) {
 		JSONObject send = new JSONObject();
 		send.put("touser", message.getFromUserName());

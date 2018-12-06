@@ -21,6 +21,12 @@ import com.shotacon.wx.config.constant.WxUrl;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 上传文件到send-anywhere
+ * 
+ * @author shotacon
+ *
+ */
 @Slf4j
 public class FileUploadUtil {
 
@@ -34,6 +40,11 @@ public class FileUploadUtil {
 
 	private static JSONObject deviceKey = null;
 
+	/**
+	 * 注册device
+	 * 
+	 * @return
+	 */
 	public static String registDevice() {
 
 		StringBuffer urlBuffer = new StringBuffer(GET_DEVICE_KEY_URL);
@@ -57,6 +68,12 @@ public class FileUploadUtil {
 		return StringUtils.EMPTY;
 	}
 
+	/**
+	 * 上传
+	 * 
+	 * @param files
+	 * @return 下载link
+	 */
 	public static String uploadFile(List<File> files) {
 
 		StringBuffer urlBuffer = new StringBuffer(UPLOAD_URL);

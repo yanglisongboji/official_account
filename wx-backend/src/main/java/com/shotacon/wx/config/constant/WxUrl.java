@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import com.shotacon.wx.util.SignatureUtil;
 
+/**
+ * 微信url
+ * 
+ * @author shotacon
+ *
+ */
 @Component
 public class WxUrl {
 
