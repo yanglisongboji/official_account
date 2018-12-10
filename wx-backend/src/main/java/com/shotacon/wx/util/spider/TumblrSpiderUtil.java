@@ -62,8 +62,6 @@ public class TumblrSpiderUtil {
 
 	public static void main(String[] args) throws Exception {
 //		doSpider("https://lookingforveins2.tumblr.com", 20);
-		Set<String> imageUrl = getImageUrl("https://lookingforveins2.tumblr.com/post/173153210681");
-		System.out.println(imageUrl);
 	}
 
 	public static String doSpider(String postUrl, int monthNum) {
