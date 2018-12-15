@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WxStuffController {
 
 	@PostMapping("/signature")
-	@ApiOperation(value = "验证消息", notes = "验证消息", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ApiOperation(value = "消息推送", notes = "消息推送", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String postHandler(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String sendTextMsg = SignatureUtil.acceptMessage(request.getInputStream());
