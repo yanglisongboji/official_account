@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.0.6.RELEASE</version>
+    <version>2.1.1.RELEASE</version>
   </parent>
   <groupId>com.shotacon.wx</groupId>
   <artifactId>official_account</artifactId>
@@ -11,5 +11,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>wx-backend</module>
+  	<module>web-shotacon</module>
   </modules>
 </project>

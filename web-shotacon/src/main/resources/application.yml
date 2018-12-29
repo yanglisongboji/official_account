@@ -1,0 +1,36 @@
+server:
+  port: 8848
+logging:
+  config: classpath:logback.xml
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://47.95.117.48:3306/wx?useUnicode: true&characterEncoding: utf8
+#    username: root
+#    password: '!QAZ2wsx'
+#    max-idle: 10
+#    max-wait: 10000
+#    min-idle: 5
+#    initial-size: 5
+#    type: com.alibaba.druid.pool.DruidDataSource
+
+
+#spring: 
+  #mvc: 
+    #view: 
+      #suffix: .html
+      
+      
+spring: 
+  thymeleaf: 
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
+    chain: 
+      strategy: 
+        content: 
+          enabled: true
+          paths: /**
