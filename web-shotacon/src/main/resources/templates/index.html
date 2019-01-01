@@ -1,50 +1,50 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<title>Boy♂Next Door</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>Boy♂Next Door</title>
 </head>
 <body>
-    <nav class="navbar navbar-default" role="navigation">
+<div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
     <div class="container-fluid">
-    <div class="navbar-header">
-        <a class="navbar-brand" href="#">Boy ♂ Next Door</a>
-    </div>
-    <div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Fuck You</a></li>
-            <li><a href="#">VAN♂様</a></li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Deep♂Dark Fantasy
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">jmeter</a></li>
-                    <li><a href="#">EJB</a></li>
-                    <li><a href="#">Jasper Report</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">分离的链接</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">另一个分离的链接</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    </div>
-</nav>
-    
-    
-    <!-- Footer -->
-    <div th:fragment="footer" class="navbar-fixed-bottom">
-        <div class="container text-center">
-            Copyright © Shotacon
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Boy ♂ Next Door</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="#">Fuck You</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">VAN♂様</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        Deep♂Dark Fantasy
+                        <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">jmeter</a>
+                        <a class="dropdown-item" href="#">EJB</a>
+                        <a class="dropdown-item" href="#">Jasper Report</a>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
+</div>
+
+
+<!-- Footer -->
+<nav th:fragment="footer" class="navbar fixed-bottom navbar-light bg-light">
+    <div class="container text-center navbar-text">
+       Copyright © Shotacon
+    </div>
+</nav>
 </body>
 </html>
