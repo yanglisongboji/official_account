@@ -3,47 +3,64 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css">
+    <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
     <title>Boy♂Next Door</title>
 </head>
 <body>
-<div>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Boy ♂ Next Door</a>
+<div class="body">
+    <nav class="navbar navbar-expand-md navbar-light" style="background-color: #e3f2fd;" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Boy ♂ Next Door</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <!--<li class="nav-item active"><a class="nav-link" href="#">Fuck Y♂u</a></li>-->
+                    <li class="nav-item active"><a class="nav-link" onclick="van()" href="#">VAN♂様</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            Deep♂
+                            <b class="caret"></b>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Dark</a>
+                            <a class="dropdown-item" href="#">Fantasy</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a class="nav-link" href="#">Fuck Y♂u</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">VAN♂様</a></li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        Deep♂
-                        <b class="caret"></b>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Dark</a>
-                        <a class="dropdown-item" href="#">Fantasy</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+    </nav>
+
+    <div class="main">
+        <h1>123</h1>
+        <h2>123</h2>
+        <h3>123</h3>
+
     </div>
-</nav>
+
+    <!-- Footer -->
+    <nav th:fragment="footer" class="navbar fixed-bottom navbar-light">
+        <div class="container text-center navbar-text" style="width: 300px;height: 20px;">
+            <b>Copyright © Shotacon</b>
+        </div>
+    </nav>
+
 </div>
-
-
-<!-- Footer -->
-<nav th:fragment="footer" class="navbar fixed-bottom navbar-light bg-light">
-    <div class="container text-center navbar-text" style="width: 300px;">
-    Copyright © Shotacon
-    </div>
-</nav>
 </body>
 </html>
