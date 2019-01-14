@@ -28,6 +28,9 @@ public class MessageEntity implements Cloneable, Serializable {
 		TEXT, IMAGE, VOICE, VIDEO, SHORTVIDEO, LOCATION, LINK, event
 	}
 
+	@Id
+	private String id;
+
 	/**
 	 * 开发者微信号
 	 */
@@ -168,7 +171,6 @@ public class MessageEntity implements Cloneable, Serializable {
 	/**
 	 * 消息id
 	 */
-	@Id
 	@XStreamAlias("MsgID")
 	private Long msgID;
 
@@ -369,6 +371,14 @@ public class MessageEntity implements Cloneable, Serializable {
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = this.fromUserName + this.msgId;
 	}
 
 }
