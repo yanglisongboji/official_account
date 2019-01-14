@@ -10,17 +10,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.shotacon.wx.entity.MessageEntity;
-import com.shotacon.wx.util.ByteUtil;
 import com.shotacon.wx.util.SignatureUtil;
-import com.thoughtworks.xstream.XStream;
+import com.shotacon.wx.util.StreamUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class MessageService {
-
-	private static XStream xstream = new XStream();
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -34,11 +31,7 @@ public class MessageService {
 	}
 
 	public String acceptMessage(ServletInputStream in) throws IOException {
-		String xml = ByteUtil.inputStreamToString(in);
-		log.info(xml);
-		xstream.processAnnotations(MessageEntity.class);
-		xstream.alias("xml", MessageEntity.class);
-		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
+		MessageEntity message = StreamUtil.handleMessage(in);
 		MessageEntity reMessage = ObjectUtils.clone(message);
 		log.info(message.toString());
 		mongoTemplate.save(message);
