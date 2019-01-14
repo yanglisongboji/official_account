@@ -30,6 +30,6 @@ spring:
   # MongoDB
   data: 
     mongodb: 
-      uri: mongodb://@47.95.117.48:27017/user
+      uri: mongodb://47.95.117.48:27017/message
   
   

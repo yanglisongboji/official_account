@@ -2,6 +2,8 @@ package com.shotacon.wx.entity;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import lombok.AllArgsConstructor;
@@ -35,6 +37,7 @@ public class MessageEntity implements Cloneable, Serializable {
 	/**
 	 * 发送方帐号（一个OpenID）
 	 */
+	@Id
 	@XStreamAlias("FromUserName")
 	private String fromUserName;
 
