@@ -1,5 +1,7 @@
 package com.shotacon.wx.entity;
 
+import java.io.Serializable;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +18,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @XStreamAlias("xml")
-public class MessageEntity implements Cloneable {
+public class MessageEntity implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public enum MessageType {
 		TEXT, IMAGE, VOICE, VIDEO, SHORTVIDEO, LOCATION, LINK, event

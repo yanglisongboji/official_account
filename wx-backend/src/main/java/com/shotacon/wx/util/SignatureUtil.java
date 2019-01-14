@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,15 +11,18 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
 import com.shotacon.wx.entity.MessageEntity;
 import com.shotacon.wx.entity.MessageEntity.MessageType;
+import com.shotacon.wx.service.MessageService;
 import com.shotacon.wx.util.aes.AesException;
-import com.shotacon.wx.util.spider.TumblrSpiderUtil;
 import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,16 @@ public class SignatureUtil {
 	private static XStream xstream = new XStream();
 
 	private static ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+	@Autowired
+	private MessageService messageServiceForAuto;
+
+	public static MessageService messageService;
+
+	@PostConstruct
+	public void init() {
+		SignatureUtil.messageService = messageServiceForAuto;
+	}
 
 	/**
 	 * 验证url
@@ -105,6 +117,7 @@ public class SignatureUtil {
 		MessageEntity message = (MessageEntity) xstream.fromXML(xml);
 		MessageEntity reMessage = ObjectUtils.clone(message);
 		log.info(message.toString());
+		messageService.save(message);
 //		if (StringUtils.isNotEmpty(message.getContent()) && message.getContent().contains("http")) {
 //			String content = message.getContent();
 //			String[] split = content.split(">>>");
