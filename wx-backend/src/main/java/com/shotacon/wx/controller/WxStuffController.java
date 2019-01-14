@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.shotacon.wx.config.constant.WxUrl;
+import com.shotacon.wx.service.MessageService;
 import com.shotacon.wx.util.RestSSLClient;
 import com.shotacon.wx.util.SignatureUtil;
 import com.shotacon.wx.util.StreamUtil;
-import com.shotacon.wx.util.aes.AesException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,15 +32,18 @@ import lombok.extern.slf4j.Slf4j;
 @Api(tags = { "微信相关接口" })
 public class WxStuffController {
 
+	@Autowired
+	private MessageService messageService;
+
 	@PostMapping("/signature")
 	@ApiOperation(value = "消息推送", notes = "消息推送", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String postHandler(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String sendTextMsg = SignatureUtil.acceptMessage(request.getInputStream());
+			String sendTextMsg = messageService.acceptMessage(request.getInputStream());
 			log.info(sendTextMsg);
 			return sendTextMsg;
-		} catch (IOException | AesException | CloneNotSupportedException e) {
-			log.error("parse xml to entity error, {}", e.getMessage());
+		} catch (IOException e) {
+			log.error("parse xml to entity error: ", e);
 			return "success";
 		}
 	}
