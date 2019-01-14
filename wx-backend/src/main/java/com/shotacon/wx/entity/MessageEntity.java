@@ -37,7 +37,6 @@ public class MessageEntity implements Cloneable, Serializable {
 	/**
 	 * 发送方帐号（一个OpenID）
 	 */
-	@Id
 	@XStreamAlias("FromUserName")
 	private String fromUserName;
 
@@ -169,6 +168,7 @@ public class MessageEntity implements Cloneable, Serializable {
 	/**
 	 * 消息id
 	 */
+	@Id
 	@XStreamAlias("MsgID")
 	private Long msgID;
 
