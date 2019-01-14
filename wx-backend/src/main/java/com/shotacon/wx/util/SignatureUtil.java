@@ -108,7 +108,8 @@ public class SignatureUtil {
 		sb.append("<FromUserName><![CDATA[").append(messageEntity.getToUserName()).append("]]></FromUserName>");
 		sb.append("<CreateTime>").append(System.currentTimeMillis()).append("</CreateTime>");
 		sb.append("<MsgType><![CDATA[").append(MessageType.TEXT).append("]]></MsgType>");
-		sb.append("<Content><![CDATA[").append(messageEntity.getContent()).append("]]></Content>");
+		sb.append("<Content><![CDATA[").append("感谢反馈").append("]]></Content>");
+//		sb.append("<Content><![CDATA[").append(messageEntity.getContent()).append("]]></Content>");
 		sb.append("</xml>");
 		return sb.toString();
 	}
