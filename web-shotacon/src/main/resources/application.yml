@@ -20,11 +20,21 @@ logging:
     #view: 
       #suffix: .html
       
+netty:
+  server:
+    port: 8011
+      
       
 spring: 
   mvc:
     favicon: 
       enabled: false
+  redis: 
+    database: 1
+    host: 34.80.16.28
+    port: 6379
+    password: Shotacon.1qaz
+    timeout: 3000
   thymeleaf: 
     prefix: classpath:/templates/
     suffix: .html
@@ -40,6 +50,6 @@ spring:
   # MongoDB
   data: 
     mongodb: 
-      uri: mongodb://@47.95.117.48:27017/user
+      #uri: mongodb://@47.95.117.48:27017/user
           
 
