@@ -13,9 +13,15 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = { "测试" }, value = "测试")
 public class TestController {
 
-	@ApiOperation(value = "测试index", notes = "测试index", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index() {
-		return "index";
-	}
+    @ApiOperation(value = "测试index", notes = "测试index", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index() {
+        return "index";
+    }
+
+    @ApiOperation(value = "测试hello", notes = "测试hello", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    public String hello() {
+        return "Hello World";
+    }
 }

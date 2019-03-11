@@ -1,4 +1,4 @@
-package com.shotacon.wx.util.spider;
+package com.shotacon.web.util.spider;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

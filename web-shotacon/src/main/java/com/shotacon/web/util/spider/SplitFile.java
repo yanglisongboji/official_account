@@ -1,4 +1,4 @@
-package com.shotacon.wx.util.spider;
+package com.shotacon.web.util.spider;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
