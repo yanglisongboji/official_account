@@ -27,7 +27,7 @@ public class ScheduledTasks {
 	/**
 	 * 每1小时55分钟执行一次, 从服务启动1小时后开始
 	 */
-	@Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = (60 + 55) * 1000 * 60)
+//	@Scheduled(initialDelay = 1000 * 60 * 60, fixedRate = (60 + 55) * 1000 * 60)
 	public void reFreshAccessToken() {
 		log.info("Start Refresh Access Token.");
 		threadPoolTaskExecutor.execute(() -> SignatureUtil.reFreshAccessToken(), 10000);

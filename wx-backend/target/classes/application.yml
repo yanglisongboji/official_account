@@ -2,17 +2,21 @@ server:
   port: 8080
 logging:
   config: classpath:logback.xml
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://47.95.117.48:3306/wx?useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: '!QAZ2wsx'
-#    max-idle: 10
-#    max-wait: 10000
-#    min-idle: 5
-#    initial-size: 5
-#    type: com.alibaba.druid.pool.DruidDataSource
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.95.117.48:3306/movie?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: '!QAZ2wsx'
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    type: com.alibaba.druid.pool.DruidDataSource
+  # MongoDB
+  data: 
+    mongodb: 
+      uri: mongodb://47.95.117.48:27017/message
 
 wx: 
   token: shotacon
@@ -26,10 +30,4 @@ wx:
 send:
   apiKey: e5e7a67f51279e43d9dddc5986ed2392fb1b4bba
  
-spring: 
-  # MongoDB
-  data: 
-    mongodb: 
-      uri: mongodb://47.95.117.48:27017/message
-  
   
